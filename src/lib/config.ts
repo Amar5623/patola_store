@@ -13,7 +13,7 @@ export const BRAND = {
   phoneDisplay: "+91 98987 16280",
   phoneDial: "+919898716280",
   whatsapp: "919898716280",
-  email: "care@pragatipatolaart.com",
+  email: "chetan@pragatipatolaart.in",
   address: {
     line1: "Rashvi Residency",
     line2: "Rajkot Bypass Road",
