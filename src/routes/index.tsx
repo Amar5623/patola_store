@@ -6,7 +6,7 @@ import loomImage from "@/assets/heritage-loom.jpg";
 import { Button } from "@/components/ui/button";
 import { SectionHeading, IkatRule } from "@/components/brand/SectionHeading";
 import { ProductCard } from "@/components/shop/ProductCard";
-import { COLLECTIONS, featuredProducts } from "@/data/products";
+import { COLLECTIONS, PRODUCTS, featuredProducts } from "@/data/products";
 import { BRAND } from "@/lib/config";
 import { whatsappSupportLink } from "@/lib/whatsapp";
 
@@ -17,13 +17,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Handwoven double ikat Patola sarees from Patan, Gujarat. Heritage motifs, resist-dyed silk and concierge guidance. Woven once. Treasured forever.",
+          "Patola sarees and dupattas in double ikat, single ikat and semi ikat. Heritage motifs, Malbari silk and concierge guidance. Woven once. Treasured forever.",
       },
       { property: "og:title", content: "Pragati Patola Art — The Art of Patan" },
       {
         property: "og:description",
         content:
-          "Handwoven double ikat Patola sarees from Patan, Gujarat. Woven once. Treasured forever.",
+          "Double ikat, single ikat and semi ikat Patola sarees and dupattas. Woven once. Treasured forever.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -123,8 +123,8 @@ function HomePage() {
       {/* SIGNATURE COLLECTION */}
       <section className="bg-cream/60 section-y">
         <div className="shell">
-          <SectionHeading eyebrow="Signature" title="Four houses of Patola" align="center" />
-          <div className="mt-14 grid gap-px md:grid-cols-2 lg:grid-cols-4">
+          <SectionHeading eyebrow="Signature" title="Three weaves of Patola" align="center" />
+          <div className="mt-14 grid gap-px md:grid-cols-3">
             {COLLECTIONS.map((collection) => (
               <Link
                 key={collection.slug}
@@ -199,7 +199,7 @@ function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading eyebrow="Featured" title="Pieces currently on offer" className="mb-0" />
             <Link to="/shop" className="label-small text-primary link-underline">
-              View all 25 pieces →
+              View all {PRODUCTS.length} pieces →
             </Link>
           </div>
           <div className="mt-14 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">

@@ -31,7 +31,7 @@ export function ProductCard({
         >
           <img
             src={product.images[0]}
-            alt={`${product.name} — ${product.technique} Patola saree`}
+            alt={product.name}
             loading="lazy"
             width={1200}
             height={1500}

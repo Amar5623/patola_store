@@ -11,7 +11,7 @@ import {
   getProductBySlug,
 } from "@/data/products";
 import { formatINR } from "@/lib/format";
-import { SHIPPING_COPY } from "@/lib/config";
+import { MAX_QUANTITY_PER_ITEM, SHIPPING_COPY } from "@/lib/config";
 import { whatsappProductLink } from "@/lib/whatsapp";
 import { useCart } from "@/store/cart";
 import { useWishlist } from "@/store/wishlist";
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/product/$slug")({
       };
     }
     const { product } = loaderData;
-    const title = `${product.name} — ${product.technique} Patola Saree | Pragati Patola Art`;
+    const title = `${product.name} | Pragati Patola Art`;
     const description = product.description.slice(0, 180);
     return {
       meta: [
@@ -190,7 +190,7 @@ function ProductPage() {
               <button
                 type="button"
                 aria-label="Increase quantity"
-                onClick={() => setQuantity((q) => Math.min(5, q + 1))}
+                onClick={() => setQuantity((q) => Math.min(MAX_QUANTITY_PER_ITEM, q + 1))}
                 className="px-4 py-3"
               >
                 <Plus className="size-4" aria-hidden />
@@ -206,6 +206,19 @@ function ProductPage() {
               <span className="label-micro">{wishlisted ? "Saved" : "Save"}</span>
             </button>
           </div>
+          {quantity === MAX_QUANTITY_PER_ITEM && (
+            <p className="text-muted-foreground mt-3 text-xs">
+              Need more than {MAX_QUANTITY_PER_ITEM}?{" "}
+              <a
+                href={whatsappProductLink(product)}
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary link-underline"
+              >
+                Ask us on WhatsApp
+              </a>
+            </p>
+          )}
 
           <div className="mt-5 space-y-3">
             <Button

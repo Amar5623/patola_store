@@ -1,20 +1,30 @@
-import crimson from "@/assets/product-crimson.jpg";
-import emerald from "@/assets/product-emerald.jpg";
-import ivory from "@/assets/product-ivory.jpg";
-import indigo from "@/assets/product-indigo.jpg";
-import weave from "@/assets/texture-weave.jpg";
-import hero from "@/assets/hero-patola.jpg";
+/**
+ * Product catalogue, from the client's brochure (PRagati patola art brochure.xlsx).
+ * One photo per piece, stored in src/assets/products/<code>.jpg.
+ * The SKU is the client's own product code, so Sheet rows match their brochure.
+ */
+
+const PHOTOS = import.meta.glob<string>("../assets/products/*.jpg", {
+  eager: true,
+  import: "default",
+});
+
+function photo(code: string) {
+  const url = PHOTOS[`../assets/products/${code.toLowerCase()}.jpg`];
+  if (!url) throw new Error(`Missing product photo for ${code}`);
+  return url;
+}
 
 export interface Product {
   id: string;
   slug: string;
   name: string;
-  category: string;
-  collection: string;
+  category: "Patola Saree" | "Patola Dupatta";
+  collection: CollectionSlug;
   price: number;
   currency: "INR";
   description: string;
-  technique: "Double Ikat" | "Single Ikat";
+  technique: "Double Ikat" | "Single Ikat" | "Semi Ikat";
   material: string;
   origin: string;
   motif: string;
@@ -33,409 +43,327 @@ export interface Product {
   featured: boolean;
 }
 
+export const TECHNIQUES: Product["technique"][] = ["Double Ikat", "Single Ikat", "Semi Ikat"];
+
 export const COLLECTIONS = [
   {
-    slug: "royal-heritage",
-    name: "Royal Heritage",
-    label: "Royal Heritage",
+    slug: "double-ikat",
+    name: "Double Ikat",
+    label: "Double Ikat",
     description:
-      "Archival compositions drawn from court textiles — dense grids, ceremonial borders and disciplined alignment.",
+      "Patola in its truest form: warp and weft are both resist-dyed before weaving, so the pattern reads the same on either side. Sarees and dupattas.",
   },
   {
-    slug: "bridal",
-    name: "Bridal",
-    label: "Bridal",
+    slug: "single-ikat",
+    name: "Single Ikat",
+    label: "Single Ikat",
     description:
-      "Pieces intended for the wedding trousseau: deep crimson grounds, gold-rich borders and generous motif fields.",
+      "Patola where one set of threads carries the dyed pattern, finished here with rich golden jhari work.",
   },
   {
-    slug: "festive",
-    name: "Festive",
-    label: "Festive",
+    slug: "semi-ikat",
+    name: "Semi Ikat",
+    label: "Semi Ikat",
     description:
-      "Lighter grounds and vivid motif play, woven for celebration days and family occasions.",
-  },
-  {
-    slug: "contemporary",
-    name: "Contemporary",
-    label: "Contemporary",
-    description:
-      "Restrained fields, open negative space and modern colour pairings for present-day wardrobes.",
+      "Semi Patola sarees with classic Patola motifs (Navratna, Manek Chowk, elephant and parrot) at a more accessible price.",
   },
 ] as const;
 
 export type CollectionSlug = (typeof COLLECTIONS)[number]["slug"];
 
-const IMAGE_SETS: Record<string, string[]> = {
-  crimson: [crimson, weave, hero],
-  emerald: [emerald, weave, hero],
-  ivory: [ivory, weave, hero],
-  indigo: [indigo, weave, hero],
+const TECHNIQUE_COLLECTION: Record<Product["technique"], CollectionSlug> = {
+  "Double Ikat": "double-ikat",
+  "Single Ikat": "single-ikat",
+  "Semi Ikat": "semi-ikat",
 };
 
 type Seed = {
+  code: string;
   name: string;
-  collection: CollectionSlug;
-  price: number;
+  category?: Product["category"];
   technique: Product["technique"];
+  price: number;
   motif: string;
   colors: string[];
-  palette: keyof typeof IMAGE_SETS;
-  availability: Product["availability"];
-  featured?: boolean;
   description: string;
-  certifications?: Product["certifications"];
+  featured?: boolean;
 };
 
 const SEEDS: Seed[] = [
+  // Double Ikat
   {
-    name: "Navratna Crimson",
-    collection: "bridal",
-    price: 185000,
+    code: "P0001",
+    name: "Deer Motif Double Ikat Dupatta",
+    category: "Patola Dupatta",
     technique: "Double Ikat",
-    motif: "Navratna Bhat",
-    colors: ["Crimson", "Gold", "Ivory"],
-    palette: "crimson",
-    availability: "in_stock",
+    price: 30999,
+    motif: "Deer",
+    colors: ["Red", "Multicolour"],
+    description: "A pot dupatta in double ikat with a deer design across the field.",
     featured: true,
-    description:
-      "A nine-jewel Navratna field woven in crimson with an ivory and gold motif structure. Both warp and weft are resist-dyed before weaving, so the pattern reads identically on either face.",
-    certifications: { handloomCertification: true },
   },
   {
-    name: "Nari Kunj Emerald",
-    collection: "royal-heritage",
-    price: 212000,
+    code: "P0002",
+    name: "Royal Blue Bird Double Ikat Saree",
     technique: "Double Ikat",
-    motif: "Nari Kunj",
-    colors: ["Emerald", "Gold", "Ivory"],
-    palette: "emerald",
-    availability: "low_stock",
-    featured: true,
-    description:
-      "The Nari Kunj composition — figures within a garden grid — held in a deep emerald ground with a ceremonial gold border.",
-    certifications: { handloomCertification: true },
-  },
-  {
-    name: "Phulwali Royale",
-    collection: "royal-heritage",
-    price: 168000,
-    technique: "Double Ikat",
-    motif: "Phulwali Bhat",
-    colors: ["Maroon", "Gold", "Green"],
-    palette: "crimson",
-    availability: "in_stock",
-    featured: true,
-    description:
-      "A flowering Phulwali field in maroon, ordered by a repeating diamond lattice and closed with a broad woven border.",
-  },
-  {
-    name: "Kunjar Ruby",
-    collection: "bridal",
-    price: 246000,
-    technique: "Double Ikat",
-    motif: "Kunjar Bhat (elephant)",
-    colors: ["Ruby", "Gold", "Ivory"],
-    palette: "crimson",
-    availability: "in_stock",
-    featured: true,
-    description:
-      "Elephant motifs in procession across a ruby ground — one of the most demanding Patola alignments to achieve on the loom.",
-    certifications: { handloomCertification: true },
-  },
-  {
-    name: "Chhabadi Ivory",
-    collection: "contemporary",
-    price: 128000,
-    technique: "Single Ikat",
-    motif: "Chhabadi Bhat (basket)",
-    colors: ["Ivory", "Crimson", "Ochre"],
-    palette: "ivory",
-    availability: "in_stock",
-    featured: true,
-    description:
-      "An open ivory field with basket motifs, drawn lighter for contemporary wear while keeping the traditional border language.",
-  },
-  {
-    name: "Popat Indigo",
-    collection: "festive",
-    price: 152000,
-    technique: "Double Ikat",
-    motif: "Popat Kunj (parrot)",
-    colors: ["Indigo", "Gold", "Green"],
-    palette: "indigo",
-    availability: "in_stock",
-    featured: true,
-    description:
-      "Parrots set within an indigo lattice with gold cross-work — a festive composition with unusual depth of ground colour.",
-  },
-  {
-    name: "Geometric Saffron",
-    collection: "contemporary",
-    price: 116000,
-    technique: "Single Ikat",
-    motif: "Geometric Bhat",
-    colors: ["Saffron", "Ivory", "Brown"],
-    palette: "ivory",
-    availability: "in_stock",
-    description:
-      "A disciplined geometric repeat in saffron and ivory, with wide negative space and a narrow woven border.",
-  },
-  {
-    name: "Heritage Crimson Gold",
-    collection: "royal-heritage",
-    price: 232000,
-    technique: "Double Ikat",
-    motif: "Ratanchowk",
-    colors: ["Crimson", "Gold"],
-    palette: "crimson",
-    availability: "low_stock",
-    description:
-      "The Ratanchowk courtyard grid, woven with a heavy gold border and a tightly aligned crimson field.",
-    certifications: { handloomCertification: true },
-  },
-  {
-    name: "Royal Emerald Ikat",
-    collection: "royal-heritage",
-    price: 198000,
-    technique: "Double Ikat",
-    motif: "Vohra Gaji Bhat",
-    colors: ["Emerald", "Ivory", "Gold"],
-    palette: "emerald",
-    availability: "in_stock",
-    description:
-      "Vohra Gaji — historically woven for merchant families — interpreted in emerald with an ivory motif structure.",
-  },
-  {
-    name: "Patan Ivory Crimson",
-    collection: "bridal",
-    price: 176000,
-    technique: "Double Ikat",
-    motif: "Paan Bhat",
-    colors: ["Ivory", "Crimson", "Gold"],
-    palette: "ivory",
-    availability: "in_stock",
-    description:
-      "A pale ivory ground carrying a crimson leaf repeat, finished with an elephant border in the Patan manner.",
-  },
-  {
-    name: "Rasleela Maroon",
-    collection: "bridal",
-    price: 268000,
-    technique: "Double Ikat",
-    motif: "Rasleela Bhat",
-    colors: ["Maroon", "Gold", "Ivory"],
-    palette: "crimson",
-    availability: "low_stock",
-    description:
-      "A narrative Rasleela field — the most time-intensive composition in the atelier, requiring months of dyeing and weaving.",
-    certifications: { handloomCertification: true },
-  },
-  {
-    name: "Chowkhandi Emerald",
-    collection: "festive",
-    price: 144000,
-    technique: "Single Ikat",
-    motif: "Chowkhandi Bhat",
-    colors: ["Emerald", "Ochre", "Ivory"],
-    palette: "emerald",
-    availability: "in_stock",
-    description:
-      "A square-grid Chowkhandi repeat in emerald and ochre, balanced for daytime festive wear.",
-  },
-  {
-    name: "Galdo Indigo Gold",
-    collection: "contemporary",
-    price: 138000,
-    technique: "Single Ikat",
-    motif: "Galdo Bhat",
-    colors: ["Indigo", "Gold"],
-    palette: "indigo",
-    availability: "in_stock",
-    description:
-      "An indigo ground with a spare gold Galdo repeat, made for those who prefer quiet Patola.",
-  },
-  {
-    name: "Pan Bhat Crimson",
-    collection: "festive",
-    price: 158000,
-    technique: "Double Ikat",
-    motif: "Paan Bhat",
-    colors: ["Crimson", "Green", "Gold"],
-    palette: "crimson",
-    availability: "in_stock",
-    description:
-      "Betel-leaf motifs in a crimson field with green accents — a classic festive Patola vocabulary.",
-  },
-  {
-    name: "Navratna Emerald",
-    collection: "royal-heritage",
-    price: 205000,
-    technique: "Double Ikat",
-    motif: "Navratna Bhat",
-    colors: ["Emerald", "Crimson", "Ivory"],
-    palette: "emerald",
-    availability: "in_stock",
-    description:
-      "The Navratna grid in emerald, with crimson and ivory jewel blocks placed at each intersection.",
-  },
-  {
-    name: "Fulvadi Ivory",
-    collection: "contemporary",
-    price: 112000,
-    technique: "Single Ikat",
-    motif: "Fulvadi Bhat",
-    colors: ["Ivory", "Rose", "Gold"],
-    palette: "ivory",
-    availability: "in_stock",
-    description:
-      "A soft ivory ground with a small-scale flowering repeat — the lightest piece in the current selection.",
-  },
-  {
-    name: "Kunjar Indigo",
-    collection: "royal-heritage",
-    price: 221000,
-    technique: "Double Ikat",
-    motif: "Kunjar Bhat (elephant)",
-    colors: ["Indigo", "Ivory", "Gold"],
-    palette: "indigo",
-    availability: "low_stock",
-    description:
-      "Elephants in ivory against indigo, with the alignment held across the full width of the field.",
-    certifications: { handloomCertification: true },
-  },
-  {
-    name: "Ratanchowk Crimson",
-    collection: "bridal",
-    price: 254000,
-    technique: "Double Ikat",
-    motif: "Ratanchowk",
-    colors: ["Crimson", "Gold", "Emerald"],
-    palette: "crimson",
-    availability: "in_stock",
-    description:
-      "A bridal Ratanchowk with emerald corner-work and a deep gold border, woven for ceremonial wear.",
-  },
-  {
-    name: "Chhabadi Emerald",
-    collection: "festive",
     price: 149000,
-    technique: "Single Ikat",
-    motif: "Chhabadi Bhat (basket)",
-    colors: ["Emerald", "Ivory", "Ochre"],
-    palette: "emerald",
-    availability: "in_stock",
-    description:
-      "Basket motifs arranged on an emerald ground with ivory outlines and a narrow ochre border.",
+    motif: "Birds",
+    colors: ["Blue", "Red"],
+    description: "A double ikat Patola saree with bird motifs set in a royal blue grid.",
   },
   {
-    name: "Popat Crimson",
-    collection: "festive",
-    price: 162000,
+    code: "P0005",
+    name: "Laheriya Sparrow and Flower Double Ikat Saree",
     technique: "Double Ikat",
-    motif: "Popat Kunj (parrot)",
-    colors: ["Crimson", "Green", "Ivory"],
-    palette: "crimson",
-    availability: "in_stock",
-    description:
-      "Parrot pairs in a crimson garden grid — a motif read as a blessing on new beginnings.",
+    price: 165000,
+    motif: "Laheriya",
+    colors: ["Blue", "Multicolour"],
+    description: "A double ikat saree in a Laheriya layout of sparrows and flowers.",
   },
   {
-    name: "Vohra Gaji Ivory",
-    collection: "royal-heritage",
-    price: 189000,
+    code: "P0006",
+    name: "Jhalar Matla Double Ikat Saree",
     technique: "Double Ikat",
-    motif: "Vohra Gaji Bhat",
-    colors: ["Ivory", "Maroon", "Gold"],
-    palette: "ivory",
-    availability: "in_stock",
-    description:
-      "The Vohra Gaji grid inverted onto an ivory ground, so the maroon motif structure carries the composition.",
+    price: 130000,
+    motif: "Jhalar Matla",
+    colors: ["Maroon", "Multicolour"],
+    description: "A double ikat saree in Jhalar Matla art, finished with a flower border.",
   },
   {
-    name: "Tarangi Indigo",
-    collection: "contemporary",
-    price: 124000,
-    technique: "Single Ikat",
-    motif: "Tarangi (wave)",
-    colors: ["Indigo", "Ivory"],
-    palette: "indigo",
-    availability: "in_stock",
-    description:
-      "A wave repeat in indigo and ivory with no gold — the most modern reading of Patola in the selection.",
-  },
-  {
-    name: "Bridal Crimson Heirloom",
-    collection: "bridal",
-    price: 296000,
+    code: "P0013",
+    name: "Antique Purple Heritage Double Ikat Saree",
     technique: "Double Ikat",
-    motif: "Navratna & Kunjar",
-    colors: ["Crimson", "Gold", "Emerald", "Ivory"],
-    palette: "crimson",
-    availability: "low_stock",
+    price: 195000,
+    motif: "Narikunjar",
+    colors: ["Purple"],
+    description:
+      "A double ikat saree in antique and royal purple that brings together Hathi Popat, Narikunjar, Panchanda, Manek Chowk, Navratna and button-flower designs, with Laheriya work.",
     featured: true,
-    description:
-      "The atelier's principal bridal piece, combining Navratna and Kunjar fields across a single length of silk.",
-    certifications: { handloomCertification: true },
   },
   {
-    name: "Festive Emerald Gold",
-    collection: "festive",
-    price: 171000,
+    code: "P0014",
+    name: "Elephant, Lion, Horse and Parrot Double Ikat Saree",
     technique: "Double Ikat",
-    motif: "Phulwali Bhat",
-    colors: ["Emerald", "Gold"],
-    palette: "emerald",
-    availability: "in_stock",
+    price: 110000,
+    motif: "Elephant and Parrot",
+    colors: ["Red", "Blue"],
     description:
-      "An emerald flowering field with a gold border, woven at a weight suited to long festive days.",
+      "A double ikat Patola with elephant, lion, horse and parrot designs in ruby red and royal blue.",
+    featured: true,
   },
   {
-    name: "Patan Indigo Heirloom",
-    collection: "royal-heritage",
-    price: 238000,
+    code: "P0027",
+    name: "Royal Blue Navratna Double Ikat Saree",
     technique: "Double Ikat",
-    motif: "Rasleela Bhat",
-    colors: ["Indigo", "Gold", "Ivory"],
-    palette: "indigo",
-    availability: "sold_out",
+    price: 130000,
+    motif: "Navratna",
+    colors: ["Blue", "Maroon"],
+    description: "A double ikat saree with a royal blue Navratna field and maroon border.",
+    featured: true,
+  },
+  {
+    code: "P0049",
+    name: "Elephant and Parrot Double Ikat Dupatta",
+    category: "Patola Dupatta",
+    technique: "Double Ikat",
+    price: 35999,
+    motif: "Elephant and Parrot",
+    colors: ["Multicolour"],
+    description: "A double ikat dupatta, also worn as a shawl, with elephant and parrot designs.",
+  },
+
+  // Single Ikat
+  {
+    code: "S0001",
+    name: "Ruby Red Jhari Single Ikat Saree",
+    technique: "Single Ikat",
+    price: 17000,
+    motif: "Jhari",
+    colors: ["Red", "Golden"],
+    description: "A single ikat Patola in rich ruby red with golden jhari art and a golden border.",
+    featured: true,
+  },
+  {
+    code: "S0002",
+    name: "Purple Jhari Single Ikat Saree",
+    technique: "Single Ikat",
+    price: 16500,
+    motif: "Jhari",
+    colors: ["Purple", "Golden"],
+    description: "A single ikat Patola in rich purple with golden jhari work.",
+  },
+  {
+    code: "S0003",
+    name: "Maroon Navratna Single Ikat Saree",
+    technique: "Single Ikat",
+    price: 17500,
+    motif: "Navratna",
+    colors: ["Maroon", "Golden"],
+    description: "A Navratna single ikat Patola in rich maroon with golden jhari work.",
+  },
+  {
+    code: "S0004",
+    name: "Golden Laheriya Single Ikat Saree",
+    technique: "Single Ikat",
+    price: 15700,
+    motif: "Laheriya",
+    colors: ["Golden"],
+    description: "A single ikat saree in Laheriya with a plain golden body.",
+  },
+
+  // Semi Ikat
+  {
+    code: "SEMI0001",
+    name: "White Navratna Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 35000,
+    motif: "Navratna",
+    colors: ["White", "Red"],
+    description: "A white Navratna semi Patola saree with a red Panchanda border.",
+  },
+  {
+    code: "SEMI0002",
+    name: "Ten Finger Design Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 33000,
+    motif: "Ten Finger",
+    colors: ["Multicolour"],
+    description: "A multicolour semi Patola saree in the ten finger design.",
+  },
+  {
+    code: "SEMI0003",
+    name: "Manek Chowk Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 33000,
+    motif: "Manek Chowk",
+    colors: ["Yellow", "Red"],
     description:
-      "A Rasleela narrative in indigo. This piece is currently reserved; comparable weaves can be discussed with the concierge.",
-    certifications: { handloomCertification: true },
+      "A semi Patola saree in a yellow and red Manek Chowk design with a Panchanda border.",
+  },
+  {
+    code: "SEMI0004",
+    name: "Blue and Maroon Navratna Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 30000,
+    motif: "Navratna",
+    colors: ["Blue", "Red"],
+    description: "A Navratna semi Patola saree in blue and maroon.",
+  },
+  {
+    code: "SEMI0005",
+    name: "White and Pink Elephant Parrot Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 35000,
+    motif: "Elephant and Parrot",
+    colors: ["White", "Pink", "Red"],
+    description:
+      "A white and pink semi Patola saree with elephant and parrot designs and a red Panchanda border.",
+  },
+  {
+    code: "SEMI0006",
+    name: "Elephant, Parrot and Star Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 35000,
+    motif: "Elephant and Parrot",
+    colors: ["Red"],
+    description:
+      "A red semi Patola saree with elephant, parrot and star designs and a Panchanda border.",
+  },
+  {
+    code: "SEMI0007",
+    name: "Chhabdi Elephant Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 39000,
+    motif: "Chhabdi",
+    colors: ["Red", "Blue"],
+    description:
+      "A red and blue semi Patola saree in the Chhabdi design, with an elephant inside each motif.",
+    featured: true,
+  },
+  {
+    code: "SEMI0008",
+    name: "White Navratna Elephant Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 35000,
+    motif: "Navratna",
+    colors: ["White", "Red"],
+    description:
+      "A white Navratna semi Patola saree with an elephant design inside and a Panchanda border pallu.",
+  },
+  {
+    code: "SEMI0009",
+    name: "Maroon and Indigo Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 33000,
+    motif: "Patola Grid",
+    colors: ["Maroon", "Indigo"],
+    description: "A semi Patola saree in maroon, red and indigo.",
+  },
+  {
+    code: "SEMI0010",
+    name: "Green Manek Chowk Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 32000,
+    motif: "Manek Chowk",
+    colors: ["Green", "Red"],
+    description: "A green Manek Chowk semi Patola saree with a Panchanda border.",
+  },
+  {
+    code: "SEMI0011",
+    name: "Yellow Navratna Tree Pallu Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 35000,
+    motif: "Navratna",
+    colors: ["Purple", "Yellow"],
+    description:
+      "A Navratna semi Patola saree in purple and yellow, with a tree design on the pallu.",
+  },
+  {
+    code: "SEMI0012",
+    name: "Green Navratna Ghungroo Border Semi Ikat Saree",
+    technique: "Semi Ikat",
+    price: 35000,
+    motif: "Navratna",
+    colors: ["Green", "Red"],
+    description: "A green Navratna semi Patola saree with a red Ghungroo border.",
   },
 ];
 
 function slugify(name: string) {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
-export const PRODUCTS: Product[] = SEEDS.map((seed, index) => ({
-  id: `ppa-${String(index + 1).padStart(3, "0")}`,
-  slug: slugify(seed.name),
-  name: seed.name,
-  category: "Patola Saree",
-  collection: seed.collection,
-  price: seed.price,
-  currency: "INR",
-  description: seed.description,
-  technique: seed.technique,
-  material: "Handwoven silk, resist-dyed yarn",
-  origin: "Patan, Gujarat",
-  motif: seed.motif,
-  colors: seed.colors,
-  dimensions: "5.5 m length × 1.1 m width (approximate, handwoven)",
-  blousePiece: "0.8 m unstitched blouse piece included",
-  images: IMAGE_SETS[seed.palette]!,
-  availability: seed.availability,
-  sku: `PPA-${seed.technique === "Double Ikat" ? "DI" : "SI"}-${String(index + 1).padStart(3, "0")}`,
-  certifications: seed.certifications ?? {},
-  featured: seed.featured ?? false,
-}));
+export const PRODUCTS: Product[] = SEEDS.map((seed) => {
+  const category = seed.category ?? "Patola Saree";
+  return {
+    id: seed.code.toLowerCase(),
+    slug: slugify(seed.name),
+    name: seed.name,
+    category,
+    collection: TECHNIQUE_COLLECTION[seed.technique],
+    price: seed.price,
+    currency: "INR",
+    description: seed.description,
+    technique: seed.technique,
+    material: "Malbari silk",
+    origin: "Gujarat, India",
+    motif: seed.motif,
+    colors: seed.colors,
+    dimensions: category === "Patola Dupatta" ? "2.5 m length" : "5.5 m length",
+    images: [photo(seed.code)],
+    availability: "in_stock",
+    sku: seed.code,
+    certifications: {},
+    featured: seed.featured ?? false,
+  };
+});
 
 export const getProductBySlug = (slug: string) => PRODUCTS.find((p) => p.slug === slug);
 export const featuredProducts = () => PRODUCTS.filter((p) => p.featured);
-export const productsByCollection = (slug: string) =>
-  PRODUCTS.filter((p) => p.collection === slug);
+export const productsByCollection = (slug: string) => PRODUCTS.filter((p) => p.collection === slug);
 
 export const ALL_MOTIFS = Array.from(new Set(PRODUCTS.map((p) => p.motif))).sort();
 export const ALL_COLORS = Array.from(new Set(PRODUCTS.flatMap((p) => p.colors))).sort();

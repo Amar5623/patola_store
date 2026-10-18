@@ -101,7 +101,7 @@ export function describeQuoteError(error: QuoteError) {
     case "SOLD_OUT":
       return `${error.name} has just been reserved. Please remove it from your bag to continue.`;
     case "INVALID_QUANTITY":
-      return `Please choose between 1 and ${MAX_QUANTITY_PER_ITEM} of ${error.name}.`;
+      return `You can order up to ${MAX_QUANTITY_PER_ITEM} of ${error.name} online. For more, please contact us on WhatsApp.`;
     case "ORDER_TOO_LARGE":
       return `Online payments are limited to ${formatINR(MAX_ORDER_TOTAL)} per order. Please split your order or contact our concierge on WhatsApp to complete it.`;
   }

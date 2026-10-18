@@ -6,16 +6,16 @@ import { COLLECTIONS, productsByCollection } from "@/data/products";
 export const Route = createFileRoute("/collections/")({
   head: () => ({
     meta: [
-      { title: "Collections — Royal Heritage, Bridal, Festive, Contemporary | Pragati Patola Art" },
+      { title: "Collections — Double Ikat, Single Ikat, Semi Ikat | Pragati Patola Art" },
       {
         name: "description",
         content:
-          "Four houses of Patola: Royal Heritage, Bridal, Festive and Contemporary. Explore handwoven pieces grouped by intent and composition.",
+          "Patola sarees and dupattas in three techniques: double ikat, single ikat and semi ikat.",
       },
       { property: "og:title", content: "Patola Collections — Pragati Patola Art" },
       {
         property: "og:description",
-        content: "Royal Heritage, Bridal, Festive and Contemporary Patola, woven in Patan.",
+        content: "Double ikat, single ikat and semi ikat Patola sarees and dupattas.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -30,10 +30,10 @@ function CollectionsIndex() {
       <PageHeader
         eyebrow="Collections"
         title="Four houses of Patola"
-        description="Pieces are grouped by the occasion they were woven for, and by the density of their motif fields."
+        description="Pieces are grouped by weaving technique: double ikat, single ikat and semi ikat."
       />
       <div className="shell py-12 md:py-20">
-        <div className="grid gap-px md:grid-cols-2">
+        <div className="grid gap-px md:grid-cols-3">
           {COLLECTIONS.map((collection) => {
             const pieces = productsByCollection(collection.slug);
             const cover = pieces[0]?.images[0];

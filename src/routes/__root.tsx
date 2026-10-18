@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Pragati Patola Art presents handwoven double ikat Patola sarees from Patan, Gujarat. Woven once. Treasured forever.",
+          "Pragati Patola Art presents Patola sarees and dupattas in double ikat, single ikat and semi ikat. Woven once. Treasured forever.",
       },
       { name: "author", content: "Pragati Patola Art" },
       { property: "og:site_name", content: "Pragati Patola Art" },

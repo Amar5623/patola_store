@@ -29,14 +29,14 @@ export const BRAND = {
 
 export const FREE_SHIPPING_THRESHOLD = 100000;
 /** Handwoven pieces are near one-of-a-kind; cap per-line quantity and distinct lines per order. */
-export const MAX_QUANTITY_PER_ITEM = 5;
+export const MAX_QUANTITY_PER_ITEM = 3;
 export const MAX_CART_LINES = 10;
 /**
  * Largest single online payment accepted. Keep this at or below the
  * per-transaction limit Razorpay assigns the account (check Dashboard →
  * Account & Settings, or ask Razorpay support). Larger orders go to the concierge.
  */
-export const MAX_ORDER_TOTAL = 500000;
+export const MAX_ORDER_TOTAL = 40000;
 export const STANDARD_SHIPPING_COST = 1500;
 
 export const SHIPPING_COPY = {

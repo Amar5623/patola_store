@@ -6,17 +6,15 @@ import { PRODUCTS } from "@/data/products";
 export const Route = createFileRoute("/shop")({
   head: () => ({
     meta: [
-      { title: "Patola Collection — 25 Handwoven Pieces | Pragati Patola Art" },
+      { title: `Patola Collection — ${PRODUCTS.length} Pieces | Pragati Patola Art` },
       {
         name: "description",
-        content:
-          "Browse 25 handwoven Patola sarees from Patan. Filter by technique, collection, motif, colour and price, with concierge guidance on every piece.",
+        content: `Browse ${PRODUCTS.length} Patola sarees and dupattas in double ikat, single ikat and semi ikat. Filter by technique, motif, colour and price, with concierge guidance on every piece.`,
       },
       { property: "og:title", content: "Patola Collection — Pragati Patola Art" },
       {
         property: "og:description",
-        content:
-          "25 handwoven Patola sarees from Patan, Gujarat. Filter by technique, motif, colour and price.",
+        content: `${PRODUCTS.length} Patola sarees and dupattas in double ikat, single ikat and semi ikat.`,
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -31,7 +29,7 @@ function ShopPage() {
       <PageHeader
         eyebrow={`${PRODUCTS.length} pieces`}
         title="Patola Collection"
-        description="Each piece is woven by hand in Patan, Gujarat. Availability is limited to what is on the loom — most compositions exist only once."
+        description="Double ikat, single ikat and semi ikat Patola sarees and dupattas in Malbari silk. Most compositions exist only once, so availability is limited."
       />
       <ProductGrid products={PRODUCTS} />
     </>

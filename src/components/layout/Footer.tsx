@@ -6,10 +6,9 @@ import { NewsletterForm } from "@/components/marketing/NewsletterForm";
 
 const SHOP = [
   { to: "/shop", label: "All Pieces" },
-  { to: "/collections/royal-heritage", label: "Royal Heritage" },
-  { to: "/collections/bridal", label: "Bridal" },
-  { to: "/collections/festive", label: "Festive" },
-  { to: "/collections/contemporary", label: "Contemporary" },
+  { to: "/collections/double-ikat", label: "Double Ikat" },
+  { to: "/collections/single-ikat", label: "Single Ikat" },
+  { to: "/collections/semi-ikat", label: "Semi Ikat" },
 ] as const;
 
 const DISCOVER = [

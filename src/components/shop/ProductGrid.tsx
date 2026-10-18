@@ -2,18 +2,13 @@ import { useMemo, useState } from "react";
 import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { QuickViewDialog } from "./QuickViewDialog";
-import {
-  ALL_COLORS,
-  ALL_MOTIFS,
-  COLLECTIONS,
-  type Product,
-} from "@/data/products";
+import { ALL_COLORS, ALL_MOTIFS, COLLECTIONS, TECHNIQUES, type Product } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatINR } from "@/lib/format";
 
 type Sort = "featured" | "price-asc" | "price-desc" | "name";
-type SignatureFilter = "all" | "double" | "single" | "silk-mark" | "festive";
+type SignatureFilter = "all" | "double" | "single" | "semi" | "dupatta";
 
 const SORTS: Array<{ value: Sort; label: string }> = [
   { value: "featured", label: "Featured" },
@@ -23,10 +18,10 @@ const SORTS: Array<{ value: Sort; label: string }> = [
 ];
 
 const PRICE_BANDS = [
-  { label: "Under ₹1,50,000", min: 0, max: 150000 },
-  { label: "₹1,50,000 – ₹2,00,000", min: 150000, max: 200000 },
-  { label: "₹2,00,000 – ₹2,50,000", min: 200000, max: 250000 },
-  { label: "Above ₹2,50,000", min: 250000, max: Number.MAX_SAFE_INTEGER },
+  { label: "Under ₹25,000", min: 0, max: 25000 },
+  { label: "₹25,000 – ₹50,000", min: 25000, max: 50000 },
+  { label: "₹50,000 – ₹1,50,000", min: 50000, max: 150000 },
+  { label: "Above ₹1,50,000", min: 150000, max: Number.MAX_SAFE_INTEGER },
 ];
 
 export function ProductGrid({
@@ -73,8 +68,8 @@ export function ProductGrid({
     let list = products.filter((product) => {
       if (signatureFilter === "double" && product.technique !== "Double Ikat") return false;
       if (signatureFilter === "single" && product.technique !== "Single Ikat") return false;
-      if (signatureFilter === "silk-mark" && !product.certifications?.silkMark) return false;
-      if (signatureFilter === "festive" && product.collection !== "festive") return false;
+      if (signatureFilter === "semi" && product.technique !== "Semi Ikat") return false;
+      if (signatureFilter === "dupatta" && product.category !== "Patola Dupatta") return false;
       if (techniques.length && !techniques.includes(product.technique)) return false;
       if (collections.length && !collections.includes(product.collection)) return false;
       if (colors.length && !product.colors.some((c) => colors.includes(c))) return false;
@@ -112,8 +107,8 @@ export function ProductGrid({
           ["all", "All Pieces"],
           ["double", "Double Ikat"],
           ["single", "Single Ikat"],
-          ["silk-mark", "Silk Mark"],
-          ["festive", "Festive"],
+          ["semi", "Semi Ikat"],
+          ["dupatta", "Dupattas"],
         ] as const).map(([value, label]) => (
           <Button
             key={value}
@@ -181,7 +176,7 @@ export function ProductGrid({
       {filtersOpen && (
         <div className="border-border animate-fade-up grid gap-8 border-b py-8 md:grid-cols-3 lg:grid-cols-5">
           <FilterGroup title="Technique">
-            {["Double Ikat", "Single Ikat"].map((value) => (
+            {TECHNIQUES.map((value) => (
               <FilterCheck
                 key={value}
                 label={value}
@@ -272,9 +267,7 @@ export function ProductGrid({
           <div className="ikat-pattern mx-auto h-12 w-28" role="presentation" />
           <p className="font-display mt-8 text-2xl">No pieces match these filters</p>
           <p className="text-muted-foreground mt-3 text-sm">
-            {signatureFilter === "silk-mark"
-              ? "No Silk Mark certification is currently recorded for this selection. Ask our concierge for verified documentation."
-              : "Relax a filter, or ask our concierge to source a comparable weave."}
+            Relax a filter, or ask our concierge to source a comparable weave.
           </p>
           <Button variant="atelierOutline" size="auto" className="mt-8" onClick={() => { clearAll(); setSignatureFilter("all"); }}>
             Clear filters
