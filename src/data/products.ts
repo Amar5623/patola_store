@@ -1,18 +1,22 @@
 /**
  * Product catalogue, from the client's brochure (PRagati patola art brochure.xlsx).
- * One photo per piece, stored in src/assets/products/<code>.jpg.
+ * Photos live in src/assets/products/<code>/, shown in filename order (1-…, 2-…).
  * The SKU is the client's own product code, so Sheet rows match their brochure.
  */
 
-const PHOTOS = import.meta.glob<string>("../assets/products/*.jpg", {
+const PHOTOS = import.meta.glob<string>("../assets/products/*/*.jpg", {
   eager: true,
   import: "default",
 });
 
-function photo(code: string) {
-  const url = PHOTOS[`../assets/products/${code.toLowerCase()}.jpg`];
-  if (!url) throw new Error(`Missing product photo for ${code}`);
-  return url;
+function photos(code: string) {
+  const prefix = `../assets/products/${code.toLowerCase()}/`;
+  const urls = Object.keys(PHOTOS)
+    .filter((path) => path.startsWith(prefix))
+    .sort()
+    .map((path) => PHOTOS[path]!);
+  if (urls.length === 0) throw new Error(`Missing product photos for ${code}`);
+  return urls;
 }
 
 export interface Product {
@@ -353,7 +357,7 @@ export const PRODUCTS: Product[] = SEEDS.map((seed) => {
     motif: seed.motif,
     colors: seed.colors,
     dimensions: category === "Patola Dupatta" ? "2.5 m length" : "5.5 m length",
-    images: [photo(seed.code)],
+    images: photos(seed.code),
     availability: "in_stock",
     sku: seed.code,
     certifications: {},

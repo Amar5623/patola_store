@@ -129,7 +129,7 @@ function ProductPage() {
               <ZoomIn className="size-3.5" aria-hidden /> {zoomed ? "Zoomed" : "Tap to zoom"}
             </span>
           </div>
-          <div className="mt-4 flex gap-3">
+          <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
             {product.images.map((image, index) => (
               <button
                 key={image + index}
@@ -138,7 +138,7 @@ function ProductPage() {
                 aria-label={`View image ${index + 1}`}
                 aria-current={activeImage === index}
                 className={cn(
-                  "size-20 overflow-hidden border transition-colors md:size-24",
+                  "size-20 shrink-0 overflow-hidden border transition-colors md:size-24",
                   activeImage === index ? "border-primary" : "border-border",
                 )}
               >
