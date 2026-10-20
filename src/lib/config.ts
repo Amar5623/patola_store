@@ -45,8 +45,8 @@ export const SHIPPING_COPY = {
 } as const;
 
 export function shippingFor(subtotal: number) {
-  // TEMP live payment test: carts of ₹2 or less ship free. Remove after the test.
-  if (subtotal <= 2) return 0;
+  // TEMP live payment test: carts of ₹200 or less ship free. Remove after the test.
+  if (subtotal <= 200) return 0;
   return subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : STANDARD_SHIPPING_COST;
 }
 
