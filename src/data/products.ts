@@ -209,7 +209,7 @@ const SEEDS: Seed[] = [
     code: "S0004",
     name: "Golden Laheriya Single Ikat Saree",
     technique: "Single Ikat",
-    price: 15700,
+    price: 2, // TEMP live payment test: revert to 15700
     motif: "Laheriya",
     colors: ["Golden"],
     description: "A single ikat saree in Laheriya with a plain golden body.",
